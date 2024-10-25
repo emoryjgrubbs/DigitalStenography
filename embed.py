@@ -254,7 +254,7 @@ def handle_argv(argv):
             output_file = unflagged_args[0]
             unflagged_args = unflagged_args[1:len(unflagged_args)]
         else:
-            output_file = "output.png"
+            output_file = "output" + '.' + input_file.split('.')[-1]
 
     if len(unflagged_args) == 0:
         return [status, input_file, output_file, secret_message, force]
