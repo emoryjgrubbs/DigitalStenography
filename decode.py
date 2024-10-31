@@ -44,7 +44,7 @@ def extract_message_from_image(image_path, output_path):
                         binary_message = ''
 
     message_file.close()
-    return -1  # "No hidden message found."
+    return -1
 
 
 def str_bin_to_bytes(str_str):
@@ -61,6 +61,25 @@ def str_bin_to_bytes(str_str):
         str_bytes.extend(cur_byte)
         # add the character in binay form to the end of bin
     return str_bytes
+
+
+def print_txt(file_path):
+    get_eof = open(file_path, "a")
+    eof = get_eof.tell()
+    get_eof.close()
+    file = open(file_path, "r")
+    
+    file_index = 0
+
+    while file_index + 512 < eof:
+        message_chunk = file.read(512)
+        print(message_chunk)
+        file_index += 512
+    message_chunk = file.read(eof - file_index)
+    print(message_chunk)
+
+    file.close()
+    return 0
 
 
 # status -6 too many args
@@ -163,11 +182,20 @@ def main():
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output File Exists\nOverwrite? Specify -f")
             else:
-                extract_message_from_image(input_file, output_file)
-                print("Success, Message writen to file: ", output_file)
+                message = extract_message_from_image(input_file, output_file)
+                if message == 1:
+                    print("Success, Message writen to file: ", output_file)
+                else:
+                    print("Warning, No Message Discovered")
+                    os.remove(output_file)
         case 2:
-            extract_message_from_image(input_file, output_file)
-            # call fun to print all string text from file
+            message = extract_message_from_image(input_file, output_file)
+            if message == 1:
+                print_txt('temp.txt')
+                os.remove('temp.txt')
+            else:
+                print("Warning, No Message Discovered")
+                os.remove('temp.txt')
         case _:
             print("Error, Unknown Error")
 
