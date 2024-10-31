@@ -1,5 +1,6 @@
 from PIL import Image
 import sys
+import os
 
 
 def extract_message_from_image(image_path, output_path):
@@ -51,24 +52,11 @@ def str_bin_to_bytes(str_str):
         # error
         return
     str_bytes = bytearray()  # empty byte string
-    for i in range(0, int(len(str_str)/8), 8):
+    for i in range(0, len(str_str), 8):
         cur_int = 0
-        if str_str[i] == '1':
-            cur_int += 128
-        if str_str[i+1] == '1':
-            cur_int += 64
-        if str_str[i+2] == '1':
-            cur_int += 32
-        if str_str[i+3] == '1':
-            cur_int += 16
-        if str_str[i+4] == '1':
-            cur_int += 8
-        if str_str[i+5] == '1':
-            cur_int += 4
-        if str_str[i+6] == '1':
-            cur_int += 2
-        if str_str[i+7] == '1':
-            cur_int += 1
+        for j in range(0, 8):
+            if str_str[i+j] == '1':
+                cur_int += 2 ** (7-j)
         cur_byte = cur_int.to_bytes(1)
         str_bytes.extend(cur_byte)
         # add the character in binay form to the end of bin
@@ -96,13 +84,13 @@ def handle_argv(argv):
         match arg:
             # flags
             case '--input':
-                current_flag = 'output image'
+                current_flag = 'input image'
             case '-i':
-                current_flag = 'output image'
+                current_flag = 'input image'
             case '--output':
-                current_flag = 'output image'
+                current_flag = 'output file'
             case '-o':
-                current_flag = 'output image'
+                current_flag = 'output file'
             case '--print':
                 status = 2
                 output_file = 'temp.txt'
@@ -120,7 +108,7 @@ def handle_argv(argv):
                                 return [-2]
                             else:
                                 input_file = arg
-                        case 'output image':
+                        case 'output file':
                             if output_file != "":
                                 return [-3]
                             else:
@@ -138,6 +126,7 @@ def handle_argv(argv):
             return [-4]
     if output_file == "":
         if len(unflagged_args) > 0:
+            status = 1
             output_file = unflagged_args[0]
             unflagged_args = unflagged_args[1:len(unflagged_args)]
         else:
