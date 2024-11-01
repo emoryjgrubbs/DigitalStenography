@@ -122,24 +122,25 @@ def modify_pixel(pixel, data, color_channel, modify_bit):
 
     # shift data to lowest unmodified bit
     shifted_data = int(data) << modify_bit
+    filter = 2 ** modify_bit
 
     # switch case for the color channel to be modified
     match color_channel:
         case 0:
             # Modify the least significant bit of the red channel
-            new_r = (r & ~1) | int(shifted_data)
+            new_r = (r & ~filter) | int(shifted_data)
             new_g = g
             new_b = b
         case 1:
             # Modify the least significant bit of the green channel
             new_r = r
-            new_g = (g & ~1) | int(shifted_data)
+            new_g = (g & ~filter) | int(shifted_data)
             new_b = b
         case 2:
             # Modify the least significant bit of the blue channel
             new_r = r
             new_g = g
-            new_b = (b & ~1) | int(shifted_data)
+            new_b = (b & ~filter) | int(shifted_data)
 
     # return modified pixel data
     return (new_r, new_g, new_b)
