@@ -33,7 +33,7 @@ def extract_message_from_image(image_path, output_path):
                             binary_message += str((b & filter) >> s)
 
                     # Check if the end of the message is reached
-                    if binary_message.endswith(end_of_message):
+                    if len(binary_message) % 8 == 0 and binary_message.endswith(end_of_message):
                         # convert str to binary
                         message_file.write(str_bin_to_bytes(binary_message[:-len(end_of_message)]))
                         message_file.close()
@@ -49,7 +49,7 @@ def extract_message_from_image(image_path, output_path):
 
 def str_bin_to_bytes(str_str):
     if (len(str_str) % 8) != 0:
-        # error
+        # error should not be reachable
         return
     str_bytes = bytearray()  # empty byte string
     for i in range(0, len(str_str), 8):
