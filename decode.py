@@ -177,7 +177,7 @@ def main():
         case -2:
             print("Error, Multiple Input Files Provided")
         case -1:
-            print("No Image Path Provided.")
+            print("Error, Flag Given as Input to Flag")
         case 1:
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output File Exists\nOverwrite? Specify -f")
