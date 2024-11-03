@@ -131,16 +131,22 @@ def main():
         case -1:
             print("Error, Flag Given as Input to Flag")
         case 1:
-            print(getPSNR(stego_path, cover_path))
-        case _:
+            files_exist = True
+            if not os.path.isfile(stego_path):
+                print("Error, Stego Image Does Not Exist")
+                files_exist = False
+            if not os.path.isfile(cover_path):
+                print("Error, Cover Image Does Not Exist")
+                files_exist = False
+            if files_exist:
+                stego_image = Image.open(stego_path)
+                stego_width, stego_height = stego_image.size
+                cover_image = Image.open(cover_path)
+                cover_width, cover_height = cover_image.size
+                if stego_width == cover_width and stego_height == cover_height:
+                    print(getPSNR(stego_path, cover_path))
+            case _:
             print("Error, Unknown Error")
 
 
-
 main()
-
-
-
-
-
-

@@ -286,24 +286,31 @@ def main():
         case -1:
             print("Error, Flag Given as Input to Flag")
         case 1:
+            file_errors = False
             if not os.path.isfile(input_file):
                 print("Error, Input Image Does Not Exist")
-            elif os.path.isfile(output_file) and not force:
+                file_errors = True
+            if os.path.isfile(output_file) and not force:
                 print("Warning, Output Image Exists\nOverwrite? Specify -f")
-            else:
+                file_errors = True
+            if not file_errors:
                 binary_message = text_to_binary(secret_message)
                 if modify_image_string(input_file, output_file, binary_message) != -1:
                     print(f"Success, String Embeded in Image: {output_file}")
                 else:
                     print("Aborting, Image Cannot Contain Message Data")
         case 2:
+            file_errors = False
             if not os.path.isfile(input_file):
                 print("Error, Input Image Does Not Exist")
+                file_errors = True
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output Image Exists\nOverwrite? Specify -f")
-            elif not os.path.isfile(secret_message):
+                file_errors = True
+            if not os.path.isfile(secret_message):
                 print("Error, Message File Does Not Exist")
-            else:
+                file_errors = True
+            if not file_errors:
                 if modify_image_txt(input_file, output_file, secret_message) != -1 :
                     print(f"Success, TXT File Contents Embeded in Image: {output_file}")
                 else:

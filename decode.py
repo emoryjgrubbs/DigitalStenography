@@ -179,9 +179,14 @@ def main():
         case -1:
             print("Error, Flag Given as Input to Flag")
         case 1:
+            file_errors = False
+            if not os.path.isfile(input_file):
+                print("Error, Input File Does Not Exist")
+                file_errors = True
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output File Exists\nOverwrite? Specify -f")
-            else:
+                file_errors = True
+            if not file_errors:
                 message = extract_message_from_image(input_file, output_file)
                 if message == 1:
                     print("Success, Message writen to file: ", output_file)
@@ -189,13 +194,16 @@ def main():
                     print("Warning, No Message Discovered")
                     os.remove(output_file)
         case 2:
-            message = extract_message_from_image(input_file, output_file)
-            if message == 1:
-                print_txt('temp.txt')
-                os.remove('temp.txt')
+            if not os.path.isfile(input_file):
+                print("Error, Input File Does Not Exist")
             else:
-                print("Warning, No Message Discovered")
-                os.remove('temp.txt')
+                message = extract_message_from_image(input_file, output_file)
+                if message == 1:
+                    print_txt('temp.txt')
+                    os.remove('temp.txt')
+                else:
+                    print("Warning, No Message Discovered")
+                    os.remove('temp.txt')
         case _:
             print("Error, Unknown Error")
 
