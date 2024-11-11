@@ -3,15 +3,25 @@ from tkinter import messagebox  # for print decode
 from tkinter import filedialog  # for selecting files
 
 
+def clear_text_feilds():
+    input_img_entry.delete(0, 'end')
+    output_img_entry.delete(0, 'end')
+    input_txt_entry.delete(0, 'end')
+    output_txt_entry.delete(0, 'end')
+
+
 def handle_submit_click():
-    global input_image
-    global output_image
-    global input_txt
-    input_image = input_img_entry.get()
-    output_image = output_img_entry.get()
-    input_txt = input_txt_entry.get()
-    command = get_command()
-    lbl_test["text"] = command
+    if mode.get() == 'embed':
+        input_img = input_img_entry.get()
+        output_img = output_img_entry.get()
+        input_txt = input_txt_entry.get()
+        action = "python embed.py -i " + input_img + " -o " + output_img + "-t" + input_txt
+    elif mode.get() == 'decode':
+        input_img = input_img_entry.get()
+        output_txt = output_txt_entry.get()
+        action = "python decode.py -i " + input_img + " -o " + output_txt
+    test_lbl = tk.Label(window, text=action)
+    test_lbl.pack()
 
 
 def clear_lsb_entry():
@@ -21,26 +31,80 @@ def clear_lsb_entry():
 
 
 def display_lsb_embed():
+    mode.set('embed')
     clear_lsb_entry()
     # input image
-    input_img_label.grid(row=1, sticky="w")
-    input_img_entry.grid(row=2)
+    input_img_label.grid(row=1, column=1, sticky="w")
+    input_img_entry.grid(row=2, column=1)
+    input_img_entry.delete(0, 'end')
+    input_img_btn.grid(row=2, column=2, padx=10)
     # output image
-    output_img_label.grid(row=3, sticky="w")
-    output_img_entry.grid(row=4)
+    output_img_label.grid(row=3, column=1, sticky="w")
+    output_img_entry.grid(row=4, column=1)
+    output_img_entry.delete(0, 'end')
+    output_img_btn.grid(row=4, column=2)
     # input txt file
-    input_txt_label.grid(row=5, sticky="w")
-    input_txt_entry.grid(row=6)
+    input_txt_label.grid(row=5, column=1, sticky="w")
+    input_txt_entry.grid(row=6, column=1)
+    input_txt_entry.delete(0, 'end')
+    input_txt_btn.grid(row=6, column=2)
 
 
 def display_lsb_decode():
+    mode.set('decode')
     clear_lsb_entry()
     # input image
-    input_img_label.grid(row=1, sticky="w")
-    input_img_entry.grid(row=2)
+    input_img_label.grid(row=1, column=1, sticky="w")
+    input_img_entry.grid(row=2, column=1)
+    input_img_entry.delete(0, 'end')
+    input_img_btn.grid(row=2, column=2)
     # output txt file
-    output_txt_label.grid(row=5, sticky="w")
-    output_txt_entry.grid(row=6)
+    output_txt_label.grid(row=3, column=1, sticky="w")
+    output_txt_entry.grid(row=4, column=1)
+    output_txt_entry.delete(0, 'end')
+    output_txt_btn.grid(row=4, column=2)
+
+
+def open_img_file():
+    title = "Select The Input Image"
+    filetypes = (('Image Files', ('*.png', '*.jpg',
+                                  '*.jpeg', '*.bmp',
+                                  '*.gif', '*.tiff',
+                                  '*.webp')),
+                 ('All Files', '*'))
+    path = filedialog.askopenfilename(initialdir="~/Downloads", title=title,
+                                      filetypes=filetypes)
+    input_img_entry.insert(0, path)
+
+
+def save_img_file():
+    title = "Select The Output Image"
+    filetypes = (('Image Files', ('*.png', '*.jpg',
+                                  '*.jpeg', '*.bmp',
+                                  '*.gif', '*.tiff',
+                                  '*.webp')),
+                 ('All Files', '*'))
+    path = filedialog.asksaveasfilename(initialdir="~/Downloads", title=title,
+                                        filetypes=filetypes)
+    output_img_entry.insert(0, path)
+
+
+def open_txt_file():
+    title = "Select The Text File to Embed"
+    filetypes = (('Text Files', '*.txt'),
+                 ('All Files', '*'))
+    path = filedialog.askopenfilename(initialdir="~/Downloads", title=title,
+                                      filetypes=filetypes)
+    input_txt_entry.insert(0, path)
+
+
+def save_txt_file():
+    title = "Select The Location to Save The Decoded Data"
+    filetypes = (('Text Files', '*.txt'),
+                 ('All Files', '*'))
+    path = filedialog.asksaveasfilename(initialdir="~/Downloads", title=title,
+                                        filetypes=filetypes)
+    output_txt_entry.insert(0, path)
 
 
 # create stego program window
@@ -48,12 +112,8 @@ window = tk.Tk()
 window.title("Stegosaurus")
 
 # global variables that will be assigned & input to command
-input_image = ""
-output_image = ""
-input_txt = ""
-output_txt = ""
+mode = tk.StringVar()
 output_print = tk.BooleanVar()
-force = tk.BooleanVar()
 
 # stegenography type title
 lbl_mode = tk.Label(text="LSB Stegenography")
@@ -80,22 +140,26 @@ frame_file_input.pack()
 # input image
 input_img_label = tk.Label(master=frame_file_input, text="Input Image")
 input_img_entry = tk.Entry(master=frame_file_input, width=50)
+input_img_btn = tk.Button(master=frame_file_input, command=open_img_file, text="Search")
 
 # output image
 output_img_label = tk.Label(master=frame_file_input, text="Output Image")
 output_img_entry = tk.Entry(master=frame_file_input, width=50)
+output_img_btn = tk.Button(master=frame_file_input, command=save_img_file, text="Search")
 
 # input text file
 input_txt_label = tk.Label(master=frame_file_input, text="Input Txt File")
 input_txt_entry = tk.Entry(master=frame_file_input, width=50)
+input_txt_btn = tk.Button(master=frame_file_input, command=open_txt_file, text="Search")
 
 # input string
 input_string_label = tk.Label(master=frame_file_input, text="Input String")
 input_string_entry = tk.Entry(master=frame_file_input, width=50)
 
-# input text file
+# output text file
 output_txt_label = tk.Label(master=frame_file_input, text="Output Txt File")
 output_txt_entry = tk.Entry(master=frame_file_input, width=50)
+output_txt_btn = tk.Button(master=frame_file_input, command=save_txt_file, text="Search")
 
 
 # Create a new frame `frame_buttons` to contain the
@@ -103,23 +167,10 @@ output_txt_entry = tk.Entry(master=frame_file_input, width=50)
 frame_buttons = tk.Frame()
 frame_buttons.pack(fill=tk.X, ipadx=5, ipady=5)
 
-btn_force = tk.Checkbutton(master=frame_buttons, text="Force ", variable=force,
-                           onvalue=True, offvalue=False, width=1, height=1)
-btn_force.pack(padx=15, ipadx=10)
-
 # Create the "Submit" button and pack it to the
 btn_submit = tk.Button(master=frame_buttons, command=handle_submit_click, text="Submit")
 btn_submit.pack(padx=10, ipadx=10)
 
-
-# TODO testing
-def get_command():
-    return input_image + ", " + output_image + ", " + input_txt + ", force: " + str(force.get())
-
-
-command = get_command()
-lbl_test = tk.Label(text=command)
-lbl_test.pack()
 
 # Start the application
 display_lsb_embed()
