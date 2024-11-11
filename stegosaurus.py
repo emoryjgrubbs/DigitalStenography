@@ -1,3 +1,4 @@
+from subprocess import Popen, PIPE
 import tkinter as tk
 from tkinter import messagebox  # for print decode
 from tkinter import filedialog  # for selecting files
@@ -15,13 +16,17 @@ def handle_submit_click():
         input_img = input_img_entry.get()
         output_img = output_img_entry.get()
         input_txt = input_txt_entry.get()
-        action = "python embed.py -i " + input_img + " -o " + output_img + "-t" + input_txt
+        lsb_embed = Popen(['python', 'embed.py', input_img, output_img, input_txt, '-f'],
+                          stdout=PIPE, stdin=PIPE, encoding='utf8')
+        responce = lsb_embed.stdout.readline()
+        # test_lbl = tk.Label(window, text=responce).pack()
     elif mode.get() == 'decode':
         input_img = input_img_entry.get()
         output_txt = output_txt_entry.get()
-        action = "python decode.py -i " + input_img + " -o " + output_txt
-    test_lbl = tk.Label(window, text=action)
-    test_lbl.pack()
+        lsb_decode = Popen(['python', 'decode.py', input_img, output_txt, '-f'],
+                           stdout=PIPE, stdin=PIPE, encoding='utf8')
+        responce = lsb_decode.stdout.readline()
+        # test_lbl = tk.Label(window, text=responce).pack()
 
 
 def clear_lsb_entry():
