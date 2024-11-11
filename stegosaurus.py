@@ -16,9 +16,16 @@ def handle_submit_click():
         input_img = input_img_entry.get()
         output_img = output_img_entry.get()
         input_txt = input_txt_entry.get()
-        lsb_embed = Popen(['python', 'embed.py', input_img, output_img, input_txt, '-f'],
+        lsb_embed = Popen(['python', 'embed.py', input_img, output_img, '-t', input_txt, '-f'],
                           stdout=PIPE, stdin=PIPE, encoding='utf8')
         responce = lsb_embed.stdout.readline()
+        match responce.split(',')[0]:
+            case 'Success':
+                messagebox.showinfo("Stegosaurus Success", responce)
+            case 'Error':
+                messagebox.showwarning("Stegosaurus Error", responce)
+            case 'Aborting':
+                messagebox.showwarning("Stegosaurus Error", responce)
         # test_lbl = tk.Label(window, text=responce).pack()
     elif mode.get() == 'decode':
         input_img = input_img_entry.get()
@@ -26,7 +33,21 @@ def handle_submit_click():
         lsb_decode = Popen(['python', 'decode.py', input_img, output_txt, '-f'],
                            stdout=PIPE, stdin=PIPE, encoding='utf8')
         responce = lsb_decode.stdout.readline()
+        match responce.split(',')[0]:
+            case 'Success':
+                messagebox.showinfo("Stegosaurus Success", responce)
+            case 'Error':
+                messagebox.showwarning("Stegosaurus Error", responce)
+            case _:
+                # TODO
+                messagebox.showinfo(";alskdf", "need to implement print")
+                # should just be for when message is printed
+                # new window to display output
+                # while responce:
+                #     output_lbl 
+                #     responce = lsb_decode.stdout.readline()
         # test_lbl = tk.Label(window, text=responce).pack()
+    clear_text_feilds()
 
 
 def clear_lsb_entry():
