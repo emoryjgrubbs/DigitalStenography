@@ -109,16 +109,19 @@ class Stegosaurus(qtw.QWidget):
                         case 'Success':
                             pop_up = qtw.QMessageBox()
                             pop_up.setWindowTitle("Stegosaurus Success")
+                            pop_up.setIcon(qtw.QMessageBox.Icon.Information)
                             pop_up.setText(responce)
                             pop_up.exec()
                         case 'Error':
                             pop_up = qtw.QMessageBox()
                             pop_up.setWindowTitle("Stegosaurus Error")
+                            pop_up.setIcon(qtw.QMessageBox.Icon.Critical)
                             pop_up.setText(responce)
                             pop_up.exec()
                         case 'Aborting':
                             pop_up = qtw.QMessageBox()
                             pop_up.setWindowTitle("Stegosaurus Error")
+                            pop_up.setIcon(qtw.QMessageBox.Icon.Warning)
                             pop_up.setText(responce)
                             pop_up.exec()
                     hide_cover_ent.setText("")
@@ -134,11 +137,13 @@ class Stegosaurus(qtw.QWidget):
                         case 'Success':
                             pop_up = qtw.QMessageBox()
                             pop_up.setWindowTitle("Stegosaurus Success")
+                            pop_up.setIcon(qtw.QMessageBox.Icon.Information)
                             pop_up.setText(responce)
                             pop_up.exec()
                         case 'Error':
                             pop_up = qtw.QMessageBox()
                             pop_up.setWindowTitle("Stegosaurus Error")
+                            pop_up.setIcon(qtw.QMessageBox.Icon.Critical)
                             pop_up.setText(responce)
                             pop_up.exec()
                         case _:
