@@ -31,21 +31,30 @@ class Stegosaurus(qtw.QWidget):
         hide_pge.setLayout(qtw.QFormLayout())
         mode_tab.addTab(hide_pge, "Hide Message")
         # hide message inputs
+        hide_cover_lbl = qtw.QLabel("Cover Image:")
+        hide_pge.layout().addRow(hide_cover_lbl)
         hide_cover_ent = qtw.QLineEdit()
         hide_cover_ent.setPlaceholderText("Enter the path to the cover image")
         hide_cover_dialog = hide_cover_ent.addAction(browse_icon, hide_cover_ent.ActionPosition(1))
         hide_cover_dialog.triggered.connect(lambda: get_path("hide_cover"))
         hide_pge.layout().addRow(hide_cover_ent)
+
+        hide_stego_lbl = qtw.QLabel("Stego Image:")
+        hide_pge.layout().addRow(hide_stego_lbl)
         hide_stego_ent = qtw.QLineEdit()
         hide_stego_ent.setPlaceholderText("Enter location to save the stego image")
         hide_stego_dialog = hide_stego_ent.addAction(browse_icon, hide_stego_ent.ActionPosition(1))
         hide_stego_dialog.triggered.connect(lambda: get_path("hide_stego"))
         hide_pge.layout().addRow(hide_stego_ent)
+
+        hide_txt_lbl = qtw.QLabel("Message File:")
+        hide_pge.layout().addRow(hide_txt_lbl)
         hide_txt_ent = qtw.QLineEdit()
         hide_txt_ent.setPlaceholderText("Enter the path to the message text file")
         hide_txt_dialog = hide_txt_ent.addAction(browse_icon, hide_txt_ent.ActionPosition(1))
         hide_txt_dialog.triggered.connect(lambda: get_path("hide_txt"))
         hide_pge.layout().addRow(hide_txt_ent)
+
         hide_str_ent = qtw.QTextEdit()
         hide_str_ent.setPlaceholderText("Enter the message to hide")
         # hide message submit
@@ -57,11 +66,16 @@ class Stegosaurus(qtw.QWidget):
         extract_pge.setLayout(qtw.QFormLayout())
         mode_tab.addTab(extract_pge, "Extract Message")
         # extract message inputs
+        extract_stego_lbl = qtw.QLabel("Stego Image:")
+        extract_pge.layout().addRow(extract_stego_lbl)
         extract_stego_ent = qtw.QLineEdit()
         extract_stego_ent.setPlaceholderText("Enter the path to the stego image")
         extract_stego_dialog = extract_stego_ent.addAction(browse_icon, extract_stego_ent.ActionPosition(1))
         extract_stego_dialog.triggered.connect(lambda: get_path("extract_stego"))
         extract_pge.layout().addRow(extract_stego_ent)
+
+        extract_txt_lbl = qtw.QLabel("Data File:")
+        extract_pge.layout().addRow(extract_txt_lbl)
         extract_txt_ent = qtw.QLineEdit()
         extract_txt_ent.setPlaceholderText("Enter the location to save the message")
         extract_txt_dialog = extract_txt_ent.addAction(browse_icon, extract_txt_ent.ActionPosition(1))
