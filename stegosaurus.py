@@ -1,4 +1,5 @@
 from subprocess import Popen, PIPE
+import sys
 import os
 from PyQt6.QtCore import Qt
 import PyQt6.QtWidgets as qtw
@@ -120,12 +121,15 @@ class Stegosaurus(qtw.QWidget):
 
 
         def handle_submit(mode):
+            stego_folder_path = sys.argv[0]
+            # path - 'stegosaurus.py'
+            stego_folder_path = stego_folder_path[0:len(stego_folder_path)-14]
             match mode:
                 case 'hide_file':
                     input_img = hide_cover_ent.text()
                     output_img = hide_stego_ent.text()
                     input_txt = hide_txt_ent.text()
-                    lsb_embed = Popen(['python', 'lsb_hide.py', input_img, output_img, '-t', input_txt, '-f'],
+                    lsb_embed = Popen(['python', stego_folder_path + 'lsb_hide.py', input_img, output_img, '-t', input_txt, '-f'],
                                       stdout=PIPE, encoding='utf8')
                     responce = lsb_embed.stdout.readline()
                     match responce.split(',')[0]:
@@ -153,7 +157,7 @@ class Stegosaurus(qtw.QWidget):
                 case 'extract':
                     input_img = extract_stego_ent.text()
                     output_txt = extract_txt_ent.text()
-                    lsb_decode = Popen(['python', 'lsb_extract.py', input_img, output_txt, '-f'],
+                    lsb_decode = Popen(['python', stego_folder_path + 'lsb_extract.py', input_img, output_txt, '-f'],
                                        stdout=PIPE, encoding='utf8')
                     responce = lsb_decode.stdout.readline()
                     match responce.split(',')[0]:
