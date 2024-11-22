@@ -33,7 +33,7 @@ def modify_image_string(input_image_path, output_image_path, binary_message):
                 img_y = 0
                 lsb_color += 1
                 # TODO greyscale images only have one channel
-                if lsb_color == 2:
+                if lsb_color == 3:
                     lsb_color = 0
                     lsb_bit += 1
                     # ABORT
@@ -79,7 +79,7 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
                     img_y = 0
                     lsb_color += 1
                     # TODO greyscale images only have one channel
-                    if lsb_color == 2:
+                    if lsb_color == 3:
                         lsb_color = 0
                         lsb_bit += 1
                         # if lsb_bit == 8, the all bit of all colors of all pixels modified, ABORT
@@ -103,7 +103,7 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
                 img_y = 0
                 lsb_color += 1
                 # TODO greyscale images only have one channel
-                if lsb_color == 2:
+                if lsb_color == 3:
                     lsb_color = 0
                     lsb_bit += 1
                     # ABORT

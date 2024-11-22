@@ -15,7 +15,7 @@ def extract_message_from_image(image_path, output_path):
 
     # Loop through pixels
     for s in range(0, 8):
-        for c in range(0, 2):
+        for c in range(0, 3):
             for y in range(height):
                 for x in range(width):
                     # TODO fix for greyscale
