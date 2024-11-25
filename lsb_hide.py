@@ -10,6 +10,8 @@ def modify_image_string(input_image_path, output_image_path, binary_message):
 
     width, height = image.size
 
+    color_channels = len(pixels[0,0])
+
     img_x = 0
     img_y = 0
     lsb_color = 0  # 0 = red, 1 = green, 2 = blue
@@ -32,8 +34,7 @@ def modify_image_string(input_image_path, output_image_path, binary_message):
             if img_y == height:
                 img_y = 0
                 lsb_color += 1
-                # TODO greyscale images only have one channel
-                if lsb_color == 3:
+                if lsb_color == color_channels:
                     lsb_color = 0
                     lsb_bit += 1
                     # ABORT
@@ -55,6 +56,8 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
     pixels = image.load()
 
     width, height = image.size
+
+    color_channels = len(pixels[0,0])
 
     img_x = 0
     img_y = 0
@@ -78,8 +81,7 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
                 if img_y == height:
                     img_y = 0
                     lsb_color += 1
-                    # TODO greyscale images only have one channel
-                    if lsb_color == 3:
+                    if lsb_color == color_channels:
                         lsb_color = 0
                         lsb_bit += 1
                         # if lsb_bit == 8, the all bit of all colors of all pixels modified, ABORT
@@ -102,8 +104,7 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
             if img_y == height:
                 img_y = 0
                 lsb_color += 1
-                # TODO greyscale images only have one channel
-                if lsb_color == 3:
+                if lsb_color == color_channels:
                     lsb_color = 0
                     lsb_bit += 1
                     # ABORT
@@ -116,34 +117,17 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
     return 0
 
 
-def modify_pixel(pixel, data, color_channel, modify_bit):
-    # TODO fix for greyscale images
-    r, g, b = pixel
-
+def modify_pixel(old_pixel, data, color_channel, modify_bit):
     # shift data to lowest unmodified bit
     shifted_data = int(data) << modify_bit
     filter = 2 ** modify_bit
 
-    # switch case for the color channel to be modified
-    match color_channel:
-        case 0:
-            # Modify the least significant bit of the red channel
-            new_r = (r & ~filter) | int(shifted_data)
-            new_g = g
-            new_b = b
-        case 1:
-            # Modify the least significant bit of the green channel
-            new_r = r
-            new_g = (g & ~filter) | int(shifted_data)
-            new_b = b
-        case 2:
-            # Modify the least significant bit of the blue channel
-            new_r = r
-            new_g = g
-            new_b = (b & ~filter) | int(shifted_data)
+    # Modify the current least significant bit of the current color channel
+    new_pixel = list(old_pixel)
+    new_pixel[color_channel] = (old_pixel[color_channel] & ~filter) | int(shifted_data)
 
     # return modified pixel data
-    return (new_r, new_g, new_b)
+    return tuple(new_pixel)
 
 
 def text_to_binary(message):
