@@ -227,19 +227,19 @@ class CPrintOutDialog(qtw.QDialog):
         self.setLayout(qtw.QVBoxLayout())
 
         responce = first
-        responce_full = qtw.QHBoxLayout()
+        responce_full = qtw.QPlainTextEdit()
+        # responce_full.setWordWrapMode(True)
         while responce != '':
-            responce_lbl = qtw.QLabel(responce)
-            responce_full.layout().addWidget(responce_lbl)
+            responce_full.appendPlainText(responce)
             responce = output.stdout.readline()
+        responce_full.setReadOnly(True)
 
-        buttons = qtw.QHBoxLayout()
         ok_button = qtw.QDialogButtonBox(qtw.QDialogButtonBox.StandardButton.Ok)
         ok_button.clicked.connect(self.close)
-        buttons.addWidget(ok_button)
 
-        self.layout().addLayout(responce_full)
-        self.layout().addLayout(buttons)
+        self.layout().addWidget(responce_full)
+        self.layout().addWidget(ok_button)
+        self.resize()
 
 
 app = qtw.QApplication([])
