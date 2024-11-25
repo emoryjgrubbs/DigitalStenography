@@ -10,7 +10,10 @@ def modify_image_string(input_image_path, output_image_path, binary_message):
 
     width, height = image.size
 
-    color_channels = len(pixels[0,0])
+    if type(pixels[0, 0]) is tuple:
+        color_channels = len(pixels[0, 0])
+    else:
+        color_channels = 1
 
     img_x = 0
     img_y = 0
@@ -26,7 +29,7 @@ def modify_image_string(input_image_path, output_image_path, binary_message):
 
     # modify pixels with image data
     for message_index in range(len(binary_message)):
-        pixels[img_x, img_y] = modify_pixel(pixels[img_x, img_y], binary_message[message_index], lsb_color, lsb_bit)
+        image.putpixel((img_x, img_y),  modify_pixel(pixels[img_x, img_y], binary_message[message_index], lsb_color, lsb_bit))
         img_x += 1
         if img_x == width:
             img_x = 0
@@ -57,7 +60,10 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
 
     width, height = image.size
 
-    color_channels = len(pixels[0,0])
+    if type(pixels[0, 0]) is tuple:
+        color_channels = len(pixels[0, 0])
+    else:
+        color_channels = 1
 
     img_x = 0
     img_y = 0
@@ -73,7 +79,7 @@ def modify_image_txt(input_image_path, output_image_path, message_file_path):
         binary_message_chunk = text_to_binary(message_chunk)
         # modify pixels with image data
         for chunk_index in range(len(binary_message_chunk)):
-            pixels[img_x, img_y] = modify_pixel(pixels[img_x, img_y], binary_message_chunk[chunk_index], lsb_color, lsb_bit)
+            image.putpixel((img_x, img_y),  modify_pixel(pixels[img_x, img_y], binary_message[message_index], lsb_color, lsb_bit))
             img_x += 1
             if img_x == width:
                 img_x = 0
@@ -123,11 +129,15 @@ def modify_pixel(old_pixel, data, color_channel, modify_bit):
     filter = 2 ** modify_bit
 
     # Modify the current least significant bit of the current color channel
-    new_pixel = list(old_pixel)
-    new_pixel[color_channel] = (old_pixel[color_channel] & ~filter) | int(shifted_data)
-
-    # return modified pixel data
-    return tuple(new_pixel)
+    if type(old_pixel) is tuple:
+        new_pixel = list(old_pixel)
+        new_pixel[color_channel] = (old_pixel[color_channel] & ~filter) | int(shifted_data)
+        # return modified pixel data
+        return tuple(new_pixel)
+    else:
+        new_pixel = (old_pixel & ~filter) | int(shifted_data)
+        # return modified pixel data
+        return new_pixel
 
 
 def text_to_binary(message):

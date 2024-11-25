@@ -10,27 +10,25 @@ def extract_message_from_image(image_path, output_path):
 
     width, height = image.size
 
+    if type(pixels[0, 0]) is tuple:
+        color_channels = len(pixels[0, 0])
+    else:
+        color_channels = 1
+
     binary_message = ""
     end_of_message = '1111111111111110'
 
     # Loop through pixels
     for s in range(0, 8):
-        for c in range(0, 3):
+        for c in range(color_channels):
             for y in range(height):
                 for x in range(width):
-                    # TODO fix for greyscale
-                    r, g, b = pixels[x, y]
+                    pixel = pixels[x, y]
                     filter = 2**s
-                    match c:
-                        # red
-                        case 0:
-                            binary_message += str((r & filter) >> s)
-                        # green
-                        case 1:
-                            binary_message += str((g & filter) >> s)
-                        # blue
-                        case 2:
-                            binary_message += str((b & filter) >> s)
+                    if type(pixel) is tuple:
+                        binary_message += str((pixel[c] & filter) >> s)
+                    else:
+                        binary_message += str((pixel & filter) >> s)
 
                     # Check if the end of the message is reached
                     if len(binary_message) % 8 == 0 and binary_message.endswith(end_of_message):
