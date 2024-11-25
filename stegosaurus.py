@@ -211,19 +211,35 @@ class Stegosaurus(qtw.QWidget):
                             pop_up.exec()
                         case _:
                             # TODO
-                            pop_up = qtw.QMessageBox()
-                            pop_up.setWindowTitle("Stegosaurus Success")
-                            pop_up.setIcon(qtw.QMessageBox.Icon.Information)
-                            pop_up.setText("The Message is: ")
-                            pop_up.setText(responce)
+                            pop_up = CPrintOutDialog(lsb_decode, responce, self)
+                            pop_up.setModal(True)
                             pop_up.exec()
-                            # should just be for when message is printed
-                            # new window to display output
-                            # while responce:
-                            #     output_lbl 
-                            #     responce = lsb_decode.stdout.readline()
                     extract_stego_ent.setText("")
                     extract_txt_ent.setText("")
+
+
+class CPrintOutDialog(qtw.QDialog):
+    def __init__(self, output, first, parent=None):
+        super().__init__(parent)
+        # title
+        self.setWindowTitle("Stegosaurus Success")
+
+        self.setLayout(qtw.QVBoxLayout())
+
+        responce = first
+        responce_full = qtw.QHBoxLayout()
+        while responce != '':
+            responce_lbl = qtw.QLabel(responce)
+            responce_full.layout().addWidget(responce_lbl)
+            responce = output.stdout.readline()
+
+        buttons = qtw.QHBoxLayout()
+        ok_button = qtw.QDialogButtonBox(qtw.QDialogButtonBox.StandardButton.Ok)
+        ok_button.clicked.connect(self.close)
+        buttons.addWidget(ok_button)
+
+        self.layout().addLayout(responce_full)
+        self.layout().addLayout(buttons)
 
 
 app = qtw.QApplication([])
