@@ -88,9 +88,36 @@ class Stegosaurus(qtw.QWidget):
         extract_txt_dialog = extract_txt_ent.addAction(browse_icon, extract_txt_ent.ActionPosition(1))
         extract_txt_dialog.triggered.connect(lambda: get_path("extract_txt"))
         extract_pge.layout().addRow(extract_txt_ent)
+
         # hide message submit
         extract_btn = qtw.QPushButton("Submit", clicked=lambda: handle_submit("extract"))
         extract_pge.layout().addRow(extract_btn)
+
+        # analyze page
+        analyze_pge = qtw.QWidget(mode_tab)
+        analyze_pge.setLayout(qtw.QFormLayout())
+        analyze_pge.layout().setHorizontalSpacing(25)
+        mode_tab.addTab(analyze_pge, "Analyze Image")
+        # analyze inputs
+        analyze_stego_lbl = qtw.QLabel("Stego Image:")
+        analyze_pge.layout().addRow(analyze_stego_lbl)
+        analyze_stego_ent = qtw.QLineEdit()
+        analyze_stego_ent.setPlaceholderText("Enter the path to the stego image")
+        analyze_stego_dialog = analyze_stego_ent.addAction(browse_icon, analyze_stego_ent.ActionPosition(1))
+        analyze_stego_dialog.triggered.connect(lambda: get_path("analyze_stego"))
+        analyze_pge.layout().addRow(analyze_stego_ent)
+
+        analyze_cover_lbl = qtw.QLabel("Cover Image:")
+        analyze_pge.layout().addRow(analyze_cover_lbl)
+        analyze_cover_ent = qtw.QLineEdit()
+        analyze_cover_ent.setPlaceholderText("Enter the path to the cover image")
+        analyze_cover_dialog = analyze_cover_ent.addAction(browse_icon, analyze_cover_ent.ActionPosition(1))
+        analyze_cover_dialog.triggered.connect(lambda: get_path("analyze_cover"))
+        analyze_pge.layout().addRow(analyze_cover_ent)
+
+        # analyze submit
+        analyze_btn = qtw.QPushButton("Submit", clicked=lambda: handle_submit("analyze"))
+        analyze_pge.layout().addRow(analyze_btn)
 
         # display
         self.layout().addWidget(method_lbl)
@@ -124,6 +151,14 @@ class Stegosaurus(qtw.QWidget):
                     path = qtw.QFileDialog.getSaveFileName(self, "Select Location to Save The Message", start_dir, txt_file_types)
                     if path:
                         extract_txt_ent.setText(path[0])
+                case 'analyze_stego':
+                    path = qtw.QFileDialog.getOpenFileName(self, "Stego Image to Analyze", start_dir, img_file_types)
+                    if path:
+                        analyze_stego_ent.setText(path[0])
+                case 'analyze_cover':
+                    path = qtw.QFileDialog.getOpenFileName(self, "Cover Image to Analyze", start_dir, img_file_types)
+                    if path:
+                        analyze_cover_ent.setText(path[0])
 
 
         def switch_hide_ent():
@@ -216,6 +251,17 @@ class Stegosaurus(qtw.QWidget):
                             pop_up.exec()
                     extract_stego_ent.setText("")
                     extract_txt_ent.setText("")
+                case 'analyze':
+                    stego_img = analyze_stego_ent.text()
+                    cover_img = analyze_cover_ent.text()
+                    analyze = Popen(['python', stego_folder_path + 'analyze.py', stego_img, cover_img],
+                                      stdout=PIPE, encoding='utf8')
+                    responce = analyze.stdout.readline()
+                    pop_up = qtw.QMessageBox()
+                    pop_up.setWindowTitle("Stegosaurus Success")
+                    pop_up.setIcon(qtw.QMessageBox.Icon.Information)
+                    pop_up.setText(responce)
+                    pop_up.exec()
 
 
 class CPrintOutDialog(qtw.QDialog):
