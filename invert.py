@@ -258,38 +258,6 @@ def main():
                 print("Error, Message File Does Not Exist")
                 file_errors = True
             if not file_errors:
-        img_x += 1
-
-
-        if img_x == width:
-            img_x = 0
-            img_y += 1
-            if img_y == height:
-                img_y = 0
-                lsb_color += 1
-                # TODO greyscale images only have one channel
-                if lsb_color == 2:
-                    lsb_color = 0
-                    lsb_bit += 1
-                    # ABORT
-                    if lsb_bit == 8:
-                        return -1
-        img_x += 1
-
-
-        if img_x == width:
-            img_x = 0
-            img_y += 1
-            if img_y == height:
-                img_y = 0
-                lsb_color += 1
-                # TODO greyscale images only have one channel
-                if lsb_color == 2:
-                    lsb_color = 0
-                    lsb_bit += 1
-                    # ABORT
-                    if lsb_bit == 8:
-                        return -1
                 modify_image_txt(input_file, output_file, secret_message)
         case _:
             print("Error, Unknown Error")

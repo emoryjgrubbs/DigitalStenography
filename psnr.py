@@ -12,7 +12,7 @@ def getPSNR(stego, cover):
     if mse == 0:
         return "The Images are Identical"
     psnr = 10 * math.log((max / mse), 10)
-    output = "The PSNR is: " + str(psnr) + "\nThe MSE is: " + str(mse)
+    output = str(psnr) + "\n" + str(mse)
     return output
 
 
@@ -145,7 +145,7 @@ def main():
                 cover_width, cover_height = cover_image.size
                 if stego_width == cover_width and stego_height == cover_height:
                     print(getPSNR(stego_path, cover_path))
-            case _:
+        case _:
             print("Error, Unknown Error")
 
 
