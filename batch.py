@@ -5,7 +5,7 @@ for (root,dirs,files) in os.walk('/home/Emu/Downloads/txt-files/', topdown=True)
     x = 1
 sorted_files = files.sort()
 
-images = ['skip', 'Rainer.bmp', 'Maltese.bmp']
+images = ['skip', 'skip', 'Maltese.bmp']
 methods = ['normal.py', 'invert.py', 'color.py', 'msb.py']
 
 def main():
