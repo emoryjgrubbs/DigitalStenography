@@ -1,4 +1,5 @@
 from PIL import Image
+from PIL import UnidentifiedImageError
 import sys
 import os
 import math
@@ -149,6 +150,24 @@ def main():
                 print("Error, Cover Image Does Not Exist")
                 files_exist = False
             if files_exist:
+                bad_stego = 1
+                bad_cover = 2
+                extention_errors = 0
+                try:
+                    Image.open(stego_path)
+                except UnidentifiedImageError:
+                    extention_errors += bad_stego
+                try:
+                    Image.open(cover_path)
+                except UnidentifiedImageError:
+                    extention_errors += bad_cover
+                if extention_errors == bad_stego:
+                    print("Error, Invalid Stego Extention")
+                elif extention_errors == bad_cover:
+                    print("Error, Invalid Cover Extention")
+                elif extention_errors == bad_stego + bad_cover:
+                    print("Error, Invalid Stego & Cover Extention")
+            if files_exist and extention_errors == 0:
                 stego_image = Image.open(stego_path)
                 stego_width, stego_height = stego_image.size
                 cover_image = Image.open(cover_path)
