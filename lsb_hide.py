@@ -1,4 +1,5 @@
 from PIL import Image
+from PIL import UnidentifiedImageError
 import sys
 import os
 
@@ -287,6 +288,33 @@ def main():
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output Image Exists\nOverwrite? Specify -f")
                 file_errors = True
+            bad_input = 1
+            bad_output = 2
+            extention_errors = 0
+            try:
+                Image.open(input_file)
+            except UnidentifiedImageError:
+                extention_errors += bad_input
+            if os.path.isfile(output_file):
+                try:
+                    Image.open(output_file)
+                except ValueError:
+                    extention_errors += bad_output
+            else:
+                try:
+                    image = Image.new(mode='RGB', size=(1, 1))
+                    image.save(output_file)
+                except ValueError:
+                    extention_errors += bad_output
+            if extention_errors == bad_input:
+                print("Error, Invalid Input Extention")
+                file_errors = True
+            elif extention_errors == bad_output:
+                print("Error, Invalid Output Extention")
+                file_errors = True
+            elif extention_errors == bad_input + bad_output:
+                print("Error, Invalid Input & Output Extention")
+                file_errors = True
             if not file_errors:
                 binary_message = text_to_binary(secret_message)
                 if modify_image_string(input_file, output_file, binary_message) != -1:
@@ -303,6 +331,33 @@ def main():
                 file_errors = True
             if not os.path.isfile(secret_message):
                 print("Error, Message File Does Not Exist")
+                file_errors = True
+            bad_input = 1
+            bad_output = 2
+            extention_errors = 0
+            try:
+                Image.open(input_file)
+            except UnidentifiedImageError:
+                extention_errors += bad_input
+            if os.path.isfile(output_file):
+                try:
+                    Image.open(output_file)
+                except ValueError:
+                    extention_errors += bad_output
+            else:
+                try:
+                    image = Image.new(mode='RGB', size=(1, 1))
+                    image.save(output_file)
+                except ValueError:
+                    extention_errors += bad_output
+            if extention_errors == bad_input:
+                print("Error, Invalid Input Extention")
+                file_errors = True
+            elif extention_errors == bad_output:
+                print("Error, Invalid Output Extention")
+                file_errors = True
+            elif extention_errors == bad_input + bad_output:
+                print("Error, Invalid Input & Output Extention")
                 file_errors = True
             if not file_errors:
                 if modify_image_txt(input_file, output_file, secret_message) != -1 :
