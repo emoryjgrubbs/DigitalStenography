@@ -276,7 +276,6 @@ class CPrintOutDialog(qtw.QDialog):
         responce_full = qtw.QPlainTextEdit()
         # responce_full.setWordWrapMode(True)
         while responce != '':
-            print("'" + responce + "'", end='')
             responce_full.insertPlainText(responce)
             responce = output.stdout.readline()
         responce_full.setReadOnly(True)
