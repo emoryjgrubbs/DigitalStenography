@@ -285,7 +285,7 @@ class CPrintOutDialog(qtw.QDialog):
 
         self.layout().addWidget(responce_full)
         self.layout().addWidget(ok_button)
-        self.resize()
+        self.resize(450,500)
 
 
 app = qtw.QApplication([])
