@@ -1,4 +1,5 @@
 from PIL import Image
+from PIL import UnidentifiedImageError
 import sys
 import os
 
@@ -184,6 +185,15 @@ def main():
             if os.path.isfile(output_file) and not force:
                 print("Warning, Output File Exists\nOverwrite? Specify -f")
                 file_errors = True
+            bad_input = 1
+            extention_error = 0
+            try:
+                Image.open(input_file)
+            except UnidentifiedImageError:
+                extention_error = bad_input
+            if extention_error == bad_input:
+                print("Error, Invalid Input Extention")
+                file_errors = True
             if not file_errors:
                 message = extract_message_from_image(input_file, output_file)
                 if message == 1:
@@ -192,9 +202,20 @@ def main():
                     print("Warning, No Message Discovered")
                     os.remove(output_file)
         case 2:
+            file_errors = False
             if not os.path.isfile(input_file):
                 print("Error, Input File Does Not Exist")
-            else:
+                file_errors = True
+            bad_input = 1
+            extention_error = 0
+            try:
+                Image.open(input_file)
+            except UnidentifiedImageError:
+                extention_error = bad_input
+            if extention_error == bad_input:
+                print("Error, Invalid Input Extention")
+                file_errors = True
+            if not file_errors:
                 message = extract_message_from_image(input_file, output_file)
                 if message == 1:
                     print_txt('temp.txt')
@@ -204,7 +225,6 @@ def main():
                     os.remove('temp.txt')
         case _:
             print("Error, Unknown Error")
-
 
 
 if __name__ == "__main__":
